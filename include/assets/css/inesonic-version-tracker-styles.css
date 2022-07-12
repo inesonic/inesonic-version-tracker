@@ -1,0 +1,123 @@
+ /**********************************************************************************************************************
+ * Copyright 2022, Inesonic, LLC
+ *
+ * GNU Public License, Version 3:
+ *   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ *   License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ *   later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ *   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ *   details.
+ *
+ *   You should have received a copy of the GNU General Public License along with this program.  If not, see
+ *   <https://www.gnu.org/licenses/>.
+ ***********************************************************************************************************************
+ */
+
+.inesonic-version-tracker-header {}
+.inesonic-version-tracker-section {}
+.inesonic-version-tracker-section-title {}
+.inesonic-version-tracker-subheader {}
+
+.inesonic-version-tracker-version-table-area {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.inesonic-version-tracker-version-table {
+    width: 100%;
+}
+
+.inesonic-version-tracker-version-table-header {
+    font-weight: bold;
+}
+
+.inesonic-version-tracker-version-table-header-row {}
+.inesonic-version-tracker-version-table-header-platform {}
+.inesonic-version-tracker-version-table-header-version {}
+.inesonic-version-tracker-version-table-header-download-url {}
+.inesonic-version-tracker-version-table-header-payload-url {}
+
+.inesonic-version-tracker-version-table-body {}
+.inesonic-version-tracker-version-table-row {}
+
+.inesonic-version-tracker-version-table-platform-data {
+    width: 10%;
+}
+
+.inesonic-version-tracker-platform-input {
+    width: 100%
+}
+
+.inesonic-version-tracker-version-table-version-data {
+    width: 10%;
+}
+
+.inesonic-version-tracker-version-input {
+    width: 100%;
+}
+
+.inesonic-version-tracker-version-table-download-url-data {
+    width: 30%;
+}
+
+.inesonic-version-tracker-download-url-input {
+    width: 100%
+}
+
+.inesonic-version-tracker-version-table-shasum-data {
+    width: 20%;
+}
+
+.inesonic-version-tracker-shasum-input {
+    width: 100%
+}
+
+.inesonic-version-tracker-version-table-payload-url-data {
+    width: 30%;
+}
+
+.inesonic-version-tracker-payload-url-input {
+    width: 100%;
+}
+
+.inesonic-version-tracker-button-area {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+}
+
+.inesonic-version-tracker-eula-version-area {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.inesonic-version-tracker-eula-version-label {}
+
+.inesonic-version-tracker-eula-version-input {
+    width: 4em;
+}
+
+.inesonic-version-tracker-eula-text-area {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.inesonic-version-tracker-eula-text-input {
+    width: 100%;
+    height: 20em;
+}
+
+.inesonic-bad-entry {
+    border-color: red !important;
+}
+
+.inesonic-disable-click {
+    pointer-events: none;
+}
