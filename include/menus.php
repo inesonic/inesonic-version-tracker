@@ -6,11 +6,11 @@
  *   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  *   License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
  *   later version.
- *   
+ *
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  *   details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License along with this program.  If not, see
  *   <https://www.gnu.org/licenses/>.
  ***********************************************************************************************************************
@@ -150,8 +150,11 @@ namespace Inesonic\VersionTracker;
                      '<table class="inesonic-version-tracker-version-table">' .
                        '<thead class="inesonic-version-tracker-version-table-header">' .
                          '<tr class="inesonic-version-tracker-version-table-header-row">' .
-                           '<td class="inesonic-version-tracker-version-table-header-platform">' .
-                             __('Platform', 'inesonic-version-tracker') .
+                           '<td class="inesonic-version-tracker-version-table-header-platform-id">' .
+                             __('Platform ID', 'inesonic-version-tracker') .
+                           '</td>' .
+                           '<td class="inesonic-version-tracker-version-table-header-platform-name">' .
+                             __('Platform Name', 'inesonic-version-tracker') .
                            '</td>' .
                            '<td class="inesonic-version-tracker-version-table-header-version">' .
                              __('Version', 'inesonic-version-tracker') .
@@ -173,16 +176,26 @@ namespace Inesonic\VersionTracker;
 
             $row_index = 0;
             foreach($platforms as $platform) {
+                $name = $this->options->platform_name($platform);
                 $version = $this->options->platform_version($platform);
                 $download_url = $this->options->download_url($platform);
                 $shasum = $this->options->shasum($platform);
                 $payload_url = $this->options->payload_url($platform);
 
-                echo self::version_table_row($row_index, $platform, $version, $download_url, $shasum, $payload_url);
+                echo self::version_table_row(
+                    $row_index,
+                    $platform,
+                    $name,
+                    $version,
+                    $download_url,
+                    $shasum,
+                    $payload_url
+                );
+
                 ++$row_index;
             }
 
-            echo self::version_table_row($row_index, '', '', '', '', '');
+            echo self::version_table_row($row_index, '', '', '', '', '', '');
 
             echo       '</tbody>' .
                      '</table>' .
@@ -232,6 +245,9 @@ namespace Inesonic\VersionTracker;
          *
          * \param[in] $platform     The textual name of the platform.
          *
+         * \param[in] $name         The pretty name for the platform.  This value will be displayed in user readable
+         *                          forms.
+         *
          * \param[in] $version      The platform specific version number.
          *
          * \param[in] $download_url The platform installer download URL.
@@ -245,17 +261,25 @@ namespace Inesonic\VersionTracker;
         static private function version_table_row(
                 int    $row_index,
                 string $platform,
+                string $name,
                 string $version,
                 string $download_url,
                 string $shasum,
                 string $payload_url
             ) {
             return '<tr class="inesonic-version-tracker-version-table-row">' .
-                     '<td class="inesonic-version-tracker-version-table-platform-data">' .
+                     '<td class="inesonic-version-tracker-version-table-platform-id-data">' .
                        '<input type="text" ' .
-                              'id="inesonic-version-tracker-platform-' . $row_index . '" ' .
-                              'class="inesonic-version-tracker-platform-input" ' .
+                              'id="inesonic-version-tracker-platform-id-' . $row_index . '" ' .
+                              'class="inesonic-version-tracker-platform-id-input" ' .
                               'value="' . esc_html($platform) . '"' .
+                       '/>' .
+                     '</td>' .
+                     '<td class="inesonic-version-tracker-version-table-platform-name-data">' .
+                       '<input type="text" ' .
+                              'id="inesonic-version-tracker-platform-name-' . $row_index . '" ' .
+                              'class="inesonic-version-tracker-platform-name-input" ' .
+                              'value="' . esc_html($name) . '"' .
                        '/>' .
                      '</td>' .
                      '<td class="inesonic-version-tracker-version-table-version-data">' .
@@ -301,11 +325,13 @@ namespace Inesonic\VersionTracker;
 
                     foreach ($version_data as $platform => $platform_data) {
                         $pl = sanitize_text_field($platform);
+                        $name = sanitize_text_field($platform_data['name']);
                         $version = sanitize_text_field($platform_data['version']);
                         $download_url = sanitize_text_field($platform_data['download_url']);
                         $shasum = sanitize_text_field($platform_data['shasum']);
                         $payload_url = sanitize_text_field($platform_data['payload_url']);
 
+                        $this->options->set_platform_name($pl, $name);
                         $this->options->set_platform_version($pl, $version);
                         $this->options->set_download_url($pl, $download_url);
                         $this->options->set_shasum($pl, $shasum);

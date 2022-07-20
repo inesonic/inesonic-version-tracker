@@ -34,7 +34,8 @@
 }
 
 .inesonic-version-tracker-version-table-header-row {}
-.inesonic-version-tracker-version-table-header-platform {}
+.inesonic-version-tracker-version-table-header-platform-id {}
+.inesonic-version-tracker-version-table-header-platform-name {}
 .inesonic-version-tracker-version-table-header-version {}
 .inesonic-version-tracker-version-table-header-download-url {}
 .inesonic-version-tracker-version-table-header-payload-url {}
@@ -42,7 +43,11 @@
 .inesonic-version-tracker-version-table-body {}
 .inesonic-version-tracker-version-table-row {}
 
-.inesonic-version-tracker-version-table-platform-data {
+.inesonic-version-tracker-version-table-platform-id-data {
+    width: 5%;
+}
+
+.inesonic-version-tracker-version-table-platform-name-data {
     width: 10%;
 }
 
@@ -51,7 +56,7 @@
 }
 
 .inesonic-version-tracker-version-table-version-data {
-    width: 10%;
+    width: 5%;
 }
 
 .inesonic-version-tracker-version-input {

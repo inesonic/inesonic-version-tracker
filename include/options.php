@@ -6,11 +6,11 @@
  *   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  *   License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
  *   later version.
- *   
+ *
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  *   details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License along with this program.  If not, see
  *   <https://www.gnu.org/licenses/>.
  ***********************************************************************************************************************
@@ -35,9 +35,20 @@ namespace Inesonic\VersionTracker;
          * Static method that is triggered when the plug-in is uninstalled.
          */
         public function plugin_uninstalled() {
-            $this->delete_option('template_directory');
-            $this->delete_option('transitions');
-            $this->delete_option('events');
+            $platforms = $this->supported_platforms();
+            foreach ($platforms as $platform) {
+                $platform_suffix = preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
+                $this->delete_option('name_' . $platform_suffix);
+                $this->delete_option('version_' . $platform_suffix);
+                $this->delete_option('download_url_' . $platform_suffix);
+                $this->delete_option('shasum_' . $platform_suffix);
+                $this->delete_option('payload_url_' . $platform_suffix);
+                $this->delete_option('software_version_' . $platform_suffix);
+            }
+
+            $this->delete_option('eula_version');
+            $this->delete_option('eula_text');
+            $this->delete_option('supported_platforms');
         }
 
         /**
@@ -88,6 +99,34 @@ namespace Inesonic\VersionTracker;
         }
 
         /**
+         * Method you can use to get the platform name for a platform.
+         *
+         * \param[in] $platform The platform to get the platform name for.
+         *
+         * \return Returns the requested platform name.
+         */
+        public function platform_name(string $platform) {
+            $option_name = 'name_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
+            return $this->get_option($option_name, '');
+        }
+
+        /**
+         * Method you can use to set the platform name for a platform.
+         *
+         * \param[in] $platform      The platform to update the platform name for.
+         *
+         * \param[in] $platform_name The new platform name.
+         */
+        public function set_platform_name(string $platform, string $platform_name) {
+            $option_name = 'name_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
+            if ($platform_name !== '') {
+                $this->update_option($option_name, $platform_name);
+            } else {
+                $this->delete_option($option_name);
+            }
+        }
+
+        /**
          * Method you can use to get the platform version for a platform.
          *
          * \param[in] $platform The platform to get the platform version for.
@@ -105,12 +144,14 @@ namespace Inesonic\VersionTracker;
          * \param[in] $platform     The platform to update the platform version for.
          *
          * \param[in] $platform_version The new platform version.
-         *
-         * \return Returns the requested download path.
          */
         public function set_platform_version(string $platform, string $platform_version) {
             $option_name = 'version_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
-            return $this->update_option($option_name, $platform_version);
+            if ($platform_version !== '') {
+                $this->update_option($option_name, $platform_version);
+            } else {
+                $this->delete_option($option_name);
+            }
         }
 
         /**
@@ -136,7 +177,11 @@ namespace Inesonic\VersionTracker;
          */
         public function set_download_url(string $platform, string $download_url) {
             $option_name = 'download_url_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
-            return $this->update_option($option_name, $download_url);
+            if ($download_url !== '') {
+                $this->update_option($option_name, $download_url);
+            } else {
+                $this->delete_option($option_name);
+            }
         }
 
         /**
@@ -162,7 +207,11 @@ namespace Inesonic\VersionTracker;
          */
         public function set_shasum(string $platform, string $shasum) {
             $option_name = 'shasum_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
-            return $this->update_option($option_name, $shasum);
+            if ($shasum !== '') {
+                $this->update_option($option_name, $shasum);
+            } else {
+                $this->delete_option($option_name);
+            }
         }
 
         /**
@@ -188,7 +237,11 @@ namespace Inesonic\VersionTracker;
          */
         public function set_payload_url(string $platform, string $payload_url) {
             $option_name = 'payload_url_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
-            return $this->update_option($option_name, $payload_url);
+            if ($payload_url !== '') {
+                $this->update_option($option_name, $payload_url);
+            } else {
+                $this->delete_option($option_name);
+            }
         }
 
         /**
@@ -212,7 +265,11 @@ namespace Inesonic\VersionTracker;
          */
         public function set_software_version(string $platform, string $software_version) {
             $option_name = 'software_version_' . preg_replace('/[^a-z0-9]/', '_', strtolower($platform));
-            return $this->update_option($option_name, $software_version);
+            if ($software_version !== '') {
+                $this->update_option($option_name, $software_version);
+            } else {
+                $this->delete_option($option_name);
+            }
         }
 
         /**

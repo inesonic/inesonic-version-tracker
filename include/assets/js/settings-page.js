@@ -29,44 +29,44 @@
  * of the MIT license.  Credit for the regular expression should go to Diego Perini.
  */
 let webUrlRegex = new RegExp(
-  "^"
+  "^" +
     // protocol identifier (optional)
     // short syntax // still required
-    "(?:(?:(?:https?|ftp):)?\\/\\/)"
+    "(?:(?:(?:https?|ftp):)?\\/\\/)" +
     // user:pass BasicAuth (optional)
-    "(?:\\S+(?::\\S*)?@)?"
-    "(?:"
+    "(?:\\S+(?::\\S*)?@)?" +
+    "(?:" +
       // IP address exclusion
       // private & local networks
-      "(?!(?:10|127)(?:\\.\\d{1,3}){3})"
-      "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})"
-      "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})"
+      "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+      "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+      "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
       // IP address dotted notation octets
       // excludes loopback network 0.0.0.0
       // excludes reserved space >= 224.0.0.0
       // excludes network & broadcast addresses
       // (first & last IP address of each class)
-      "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])"
-      "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}"
-      "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))"
-    "|"
+      "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+      "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+      "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+    "|" +
       // host & domain names, may end with dot
       // can be replaced by a shortest alternative
       // (?![-_])(?:[-\\w\\u00a1-\\uffff]{0,63}[^-_]\\.)+
-      "(?:"
-        "(?:"
-          "[a-z0-9\\u00a1-\\uffff]"
-          "[a-z0-9\\u00a1-\\uffff_-]{0,62}"
-        ")?"
-        "[a-z0-9\\u00a1-\\uffff]\\."
-      ")+"
+      "(?:" +
+        "(?:" +
+          "[a-z0-9\\u00a1-\\uffff]" +
+          "[a-z0-9\\u00a1-\\uffff_-]{0,62}" +
+        ")?" +
+        "[a-z0-9\\u00a1-\\uffff]\\." +
+      ")+" +
       // TLD identifier name, may end with dot
-      "(?:[a-z\\u00a1-\\uffff]{2,}\\.?)"
-    ")"
+      "(?:[a-z\\u00a1-\\uffff]{2,}\\.?)" +
+    ")" +
     // port number (optional)
-    "(?::\\d{2,5})?"
+    "(?::\\d{2,5})?" +
     // resource path (optional)
-    "(?:[/?#]\\S*)?"
+    "(?:[/?#]\\S*)?" +
   "$", "i"
 );
 
@@ -132,16 +132,18 @@ function inesonicCheckIfVersionUpdateAllowed() {
     let nonEmptyRows  = false;
 
     for (let rowIndex=0 ; rowIndex<numberRows ; ++rowIndex) {
-        let platform = jQuery("#inesonic-version-tracker-platform-" + rowIndex).val().trim();
+        let platform = jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).val().trim();
+        let name = jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).val().trim();
         let version = jQuery("#inesonic-version-tracker-version-" + rowIndex).val().trim();
         let downloadUrl = jQuery("#inesonic-version-tracker-download-url-" + rowIndex).val().trim();
         let shasum = jQuery("#inesonic-version-tracker-shasum-" + rowIndex).val().trim();
         let payloadUrl = jQuery("#inesonic-version-tracker-payload-url-" + rowIndex).val().trim();
 
-        if (payloadUrl || shasum || downloadUrl || version || platform) {
+        if (payloadUrl || shasum || downloadUrl || version || name || platform) {
             nonEmptyRows = true;
             updateAllowed = (
                    updateAllowed
+				&& name
                 && version
                 && platform
                 && inesonicIsValidUrl(downloadUrl)
@@ -166,26 +168,34 @@ function inesonicCheckIfVersionUpdateAllowed() {
  */
 function inesonicValidateRow(rowIndex) {
     if ((rowIndex + 1) >= inesonicNumberPlatformRows()) {
-        inesonicAppendVersionRow("", "", "", "", "");
+        inesonicAppendVersionRow("", "", "", "", "", "");
     }
 
-    let platform = jQuery("#inesonic-version-tracker-platform-" + rowIndex).val().trim();
+    let platform = jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).val().trim();
+    let name = jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).val().trim();
     let version = jQuery("#inesonic-version-tracker-version-" + rowIndex).val().trim();
     let downloadUrl = jQuery("#inesonic-version-tracker-download-url-" + rowIndex).val().trim();
     let shasum = jQuery("#inesonic-version-tracker-shasum-" + rowIndex).val().trim();
     let payloadUrl = jQuery("#inesonic-version-tracker-payload-url-" + rowIndex).val().trim();
 
-    if (!payloadUrl && !shasum && !downloadUrl && !version && !platform) {
-        jQuery("#inesonic-version-tracker-platform-" + rowIndex).removeClass("inesonic-bad-entry");
+    if (!payloadUrl && !shasum && !downloadUrl && !version && !name && !platform) {
+        jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).removeClass("inesonic-bad-entry");
+        jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).removeClass("inesonic-bad-entry");
         jQuery("#inesonic-version-tracker-version-" + rowIndex).removeClass("inesonic-bad-entry");
         jQuery("#inesonic-version-tracker-download-url-" + rowIndex).removeClass("inesonic-bad-entry");
         jQuery("#inesonic-version-tracker-shasum-" + rowIndex).removeClass("inesonic-bad-entry");
         jQuery("#inesonic-version-tracker-payload-url-" + rowIndex).removeClass("inesonic-bad-entry");
     } else {
         if (platform) {
-            jQuery("#inesonic-version-tracker-platform-" + rowIndex).removeClass("inesonic-bad-entry");
+            jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).removeClass("inesonic-bad-entry");
         } else {
-            jQuery("#inesonic-version-tracker-platform-" + rowIndex).addClass("inesonic-bad-entry");
+            jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).addClass("inesonic-bad-entry");
+        }
+
+        if (name) {
+            jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).removeClass("inesonic-bad-entry");
+        } else {
+            jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).addClass("inesonic-bad-entry");
         }
 
         if (version) {
@@ -222,6 +232,16 @@ function inesonicValidateRow(rowIndex) {
  * \param[in] event The event that triggered the call to this function.
  */
 function inesonicPlatformTextChanged(event) {
+    let rowIndex = inesonicGetRowIndex(event.target.id);
+    inesonicValidateRow(rowIndex);
+}
+
+/**
+ * Function that is triggered when the platform name changes.
+ *
+ * \param[in] event The event that triggered the call to this function.
+ */
+function inesonicPlatformNameChanged(event) {
     let rowIndex = inesonicGetRowIndex(event.target.id);
     inesonicValidateRow(rowIndex);
 }
@@ -300,7 +320,8 @@ function inesonicCreateVersionTableData(areaClass, inputId, inputClass, inputVal
  * \param[in] rowIndex The zero based row index to bind to.
  */
 function inesonicBindEventsToVersionTableRow(rowIndex) {
-    jQuery("#inesonic-version-tracker-platform-" + rowIndex).on("keyup change paste", inesonicPlatformTextChanged);
+    jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).on("keyup change paste", inesonicPlatformTextChanged);
+    jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).on("keyup change paste", inesonicPlatformNameChanged);
     jQuery("#inesonic-version-tracker-version-" + rowIndex).on("keyup change paste", inesonicVersionTextChanged);
     jQuery("#inesonic-version-tracker-download-url-" + rowIndex).on("keyup change paste", inesonicDownloadUrlChanged);
     jQuery("#inesonic-version-tracker-shasum-" + rowIndex).on("keyup change paste", inesonicShasumChanged);
@@ -312,6 +333,8 @@ function inesonicBindEventsToVersionTableRow(rowIndex) {
  *
  * \param[in] platform    The textual name of the platform.
  *
+ * \param[in] name        The pretty name for the platform.
+ *
  * \param[in] version     The platform specific version number.
  *
  * \param[in] downloadUrl The platform installer download URL.
@@ -320,7 +343,7 @@ function inesonicBindEventsToVersionTableRow(rowIndex) {
  *
  * \param[in] payloadUrl  The payload URL for the platform.
  */
-function inesonicAppendVersionRow(platform, version, downloadUrl, shasum, payloadUrl) {
+function inesonicAppendVersionRow(platform, name, version, downloadUrl, shasum, payloadUrl) {
     let versionTableBody = document.getElementById("inesonic-version-tracker-version-table-body");
     let rowIndex = versionTableBody.childElementCount;
 
@@ -329,10 +352,19 @@ function inesonicAppendVersionRow(platform, version, downloadUrl, shasum, payloa
 
     tableRow.appendChild(
         inesonicCreateVersionTableData(
-            "inesonic-version-tracker-version-table-platform-data",
-            "inesonic-version-tracker-platform-" + rowIndex,
-            "inesonic-version-tracker-platform-input",
+            "inesonic-version-tracker-version-table-platform-id-data",
+            "inesonic-version-tracker-platform-id-" + rowIndex,
+            "inesonic-version-tracker-platform-id-input",
             platform
+        )
+    );
+
+    tableRow.appendChild(
+        inesonicCreateVersionTableData(
+            "inesonic-version-tracker-version-table-platform-name-data",
+            "inesonic-version-tracker-platform-name-" + rowIndex,
+            "inesonic-version-tracker-platform-name-input",
+            name
         )
     );
 
@@ -389,50 +421,14 @@ function inesonicBindEventHandlers() {
 }
 
 /**
- * Function that is triggered to update the mailer settings.
- */
-function inesonicMailerConfigureSettingsSubmit() {
-    let templateDirectory = jQuery("#inesonic-mailer-template-directory").val();
-    let transitions = jQuery("#inesonic-mailer-transitions").val();
-    let events = jQuery("#inesonic-mailer-events").val();
-
-    jQuery.ajax(
-        {
-            type: "POST",
-            url: ajax_object.ajax_url,
-            data: {
-                "action" : "inesonic_mailer_update_settings",
-                "template_directory" : templateDirectory,
-                "transitions" : transitions,
-                "events" : events
-            },
-            dataType: "json",
-            success: function(response) {
-                if (response !== null) {
-                    if (response.status == 'OK') {
-                        inesonicMailerToggleConfiguration();
-                    } else {
-                        alert("Failed to update Mailer settings\n" + response.status);
-                    }
-                } else {
-                    alert("Failed to update Mailer API key.");
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log("Could not update configuration: " + errorThrown);
-            }
-        }
-    );
-}
-
-/**
  * Function that is triggered to update the software version data.
  */
 function inesonicUpdateVersionData() {
     let numberRows = inesonicNumberPlatformRows();
     let versionData = {}
     for (let rowIndex=0 ; rowIndex<numberRows ; ++rowIndex) {
-        let platform = jQuery("#inesonic-version-tracker-platform-" + rowIndex).val().trim();
+        let platform = jQuery("#inesonic-version-tracker-platform-id-" + rowIndex).val().trim();
+        let name = jQuery("#inesonic-version-tracker-platform-name-" + rowIndex).val().trim();
         let version = jQuery("#inesonic-version-tracker-version-" + rowIndex).val().trim();
         let downloadUrl = jQuery("#inesonic-version-tracker-download-url-" + rowIndex).val().trim();
         let shasum = jQuery("#inesonic-version-tracker-shasum-" + rowIndex).val().trim();
@@ -440,6 +436,7 @@ function inesonicUpdateVersionData() {
 
         if (platform && version && downloadUrl && shasum) {
             versionData[platform] = {
+				"name" : name,
                 "version" : version,
                 "download_url" : downloadUrl,
                 "shasum" : shasum,
@@ -459,7 +456,9 @@ function inesonicUpdateVersionData() {
             dataType: "json",
             success: function(response) {
                 if (response !== null) {
-                    if (response.status != 'OK') {
+                    if (response.status == 'OK') {
+						alert("Configuration updated");
+					} else {
                         alert("Failed to update version data: " + response.status);
                     }
                 } else {
