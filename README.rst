@@ -135,21 +135,21 @@ An example dictionary is shown below:
 
    {
        "windows" : {
-	       "name" : "Windows",
+           "name" : "Windows",
            "version" : "1e",
            "download_url" : "https://mysite.com/installers/windows.exe",
            "shasum" : "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
            "payload_url" : "https://installer.mysite.com/v1/windows/"
         },
        "linux" : {
-	       "name" : "Linux (AMD64)",
+           "name" : "Linux (AMD64)",
            "version" : "1e",
            "download_url" : "https://mysite.com/installers/linux.sh",
            "shasum" : "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210".
            "payload_url" : "https://installer.mysite.com/v1/linux/"
         },
        "beos" : {
-	       "name" : "BeOS",
+           "name" : "BeOS",
            "version" : "1e",
            "download_url" : "https://mysite.com/installers/beos.sh",
            "shasum" : "efcdab8967452301efcdab8967452301efcdab8967452301efcdab8967452301",
